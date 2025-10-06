@@ -1,3 +1,15 @@
+"""
+================================================================================
+MODEL LOG: 
+================================================================================
+1. Targets: Build a working, convolutional model skeleton using Conv/BN/GAP blocks and to keep the total parameters under the tight 8,000 constraint.
+
+2. Results: Total parameters: 7,426. Best Train Acc: 97.22%. Best Test Acc: 98.390%. Last 3 Avg Test Acc: 98.377%.
+
+3. Analysis: The model was extremely stable but failed due to slow convergence. The Max LR(0.01) was far too low, resulting in the model running out of time before reaching its potential. The low accuracy across the board showed the network was simply under-trained. Hence, decided that the target for the next experiment must be to slightly increase the learning rate to see if a small speed increase would be enough.
+================================================================================
+"""
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
