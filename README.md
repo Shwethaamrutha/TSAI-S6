@@ -12,7 +12,7 @@ This repository documents the process of designing and tuning a Convolutional Ne
 
 -----
 
-## 🛠️ The Final Architecture: OptimizedNetV36
+## 🛠️ The Final Architecture: 
 
 The final model is an $\mathbf{6,260}$-parameter design that balances capacity and generalization perfectly.
 
