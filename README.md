@@ -14,7 +14,56 @@ This repository documents the process of designing and tuning a Convolutional Ne
 
 ## 🛠️ The Final Architecture: 
 
-The final model is an $\mathbf{6,260}$-parameter design that balances capacity and generalization perfectly.
+The final model is an $\mathbf{6,260}$-parameter design that balances capacity and generalization perfectly. The architecture uses a sequence of $\text{Conv} \to \text{BN} \to \text{ReLU}$ blocks followed by two pooling layers, concluding with a $1 \times 1$ convolution and Global Average Pooling ($\text{GAP}$).
+
+```python
+class OptimizedNetV36(nn.Module):
+    def __init__(self):
+        super(OptimizedNetV36, self).__init__()
+        # Input: 1x28x28 | RF: 1
+
+        # C1 (3x3, 1@3x3 -> 8)
+        self.conv1 = nn.Conv2d(1, 8, kernel_size=3, padding=0, bias=False) # 26x26 | RF: 3
+        self.bn1 = nn.BatchNorm2d(8)
+
+        # C2 (3x3, 8@3x3 -> 10)
+        self.conv2 = nn.Conv2d(8, 10, kernel_size=3, padding=0, bias=False) # 24x24 | RF: 5
+        self.bn2 = nn.BatchNorm2d(10)
+
+        # P1 (2x2 MaxPool)
+        self.pool1 = nn.MaxPool2d(2, 2) # 12x12 | RF: 6
+
+        # C3 (3x3, 10@3x3 -> 12)
+        self.conv3 = nn.Conv2d(10, 12, kernel_size=3, padding=0, bias=False) # 10x10 | RF: 10
+        self.bn3 = nn.BatchNorm2d(12)
+
+        # P2 (2x2 MaxPool)
+        self.pool2 = nn.MaxPool2d(2, 2) # 5x5 | RF: 12
+
+        # C4 (3x3, 12@3x3 -> 16)
+        self.conv4 = nn.Conv2d(12, 16, kernel_size=3, padding=0, bias=False) # 3x3 | RF: 20
+        self.bn4 = nn.BatchNorm2d(16)
+
+        # C5 (3x3, 16@3x3 -> 16)
+        self.conv5 = nn.Conv2d(16, 16, kernel_size=3, padding=0, bias=False) # 1x1 | RF: 28
+        self.bn5 = nn.BatchNorm2d(16)
+
+        # C6 (1x1 Transition, 16@1x1 -> 10)
+        self.conv_final = nn.Conv2d(16, 10, kernel_size=1, bias=True)
+
+    def forward(self, x):
+        x = F.relu(self.bn1(self.conv1(x)))
+        x = F.relu(self.bn2(self.conv2(x)))
+        x = self.pool1(x)
+        x = F.relu(self.bn3(self.conv3(x)))
+        x = self.pool2(x)
+        x = F.relu(self.bn4(self.conv4(x)))
+        x = F.relu(self.bn5(self.conv5(x)))
+        x = self.conv_final(x)
+        x = F.avg_pool2d(x, x.size()[2:]) # Global Average Pooling (GAP)
+        x = x.view(-1, 10) # Flatten
+        return F.log_softmax(x, dim=-1)
+```
 
 ### Parameter Count Calculation
 
