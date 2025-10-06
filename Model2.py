@@ -1,3 +1,15 @@
+"""
+================================================================================
+MODEL LOG: 
+================================================================================
+
+Targets: Target was to fix the slow convergence by slightly increasing the Max LR to 0.015 and using the slightly smaller 6,402 parameter count to see if the small speed boost was sufficient.
+
+Results: Total parameters: 6,402. Best Train Acc: 96.92%. Best Test Acc: 97.86%. Last 3 Avg Test Acc: 97.810%.
+Analysis: This run was a failure. Despite the faster LR, the performance got worse than V1. This proved two things: 0.015 was still too slow, and the 6,402 parameter structure was not as robust as hoped. The conclusion was firm: I needed to find a better base structure before trying a massive speed increase.
+================================================================================
+"""
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
