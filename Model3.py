@@ -1,3 +1,17 @@
+"""
+================================================================================
+MODEL LOG: 
+================================================================================
+
+Targets: Test the most minimal and potentially strongest structure, the 6,260 parameter count, using the same slow Max LR (0.015) one last time to validate the architecture itself. 
+
+Results: Total parameters: 6,260. Best Train Acc: 98.87%. Best Test Acc: 99.170%. Last 3 Avg Test Acc: 99.110%.
+
+Analysis: This was the most crucial early learning. The accuracy jumped dramatically despite the slow LR—from 97.95% to 99.11%. This proved that the 6,260 parameter architecture was the optimal base structure for my constraints. I decided that my next experiment must definitively solve the speed issue by drastically increasing the Max LR to 0.05, as the only remaining problem was slow convergence.
+
+================================================================================
+"""
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
